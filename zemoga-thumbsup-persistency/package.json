@@ -1,0 +1,17 @@
+{
+  "name": "zemoga-thumbsup-persistency",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Thumbs Up Persistency backend",
+  "main": "index.js",
+  "scripts": {
+    "seed": "node ./db/seeders.js",
+    "dev": "lambda-local -l index.js -h handler --watch 8008"
+  },
+  "keywords": [],
+  "author": "José Duque",
+  "license": "ISC",
+  "dependencies": {
+    "ioredis": "^5.3.2"
+  }
+}

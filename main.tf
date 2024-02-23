@@ -151,6 +151,14 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 resource "aws_apigatewayv2_api" "lambda" {
   name          = "thumbsup_gw"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_headers = ["content-type"]
+    allow_methods = ["POST", "GET", "OPTIONS"]
+    max_age       = 300
+  }
+
 }
 
 resource "aws_apigatewayv2_stage" "lambda" {

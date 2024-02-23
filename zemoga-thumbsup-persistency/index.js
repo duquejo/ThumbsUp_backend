@@ -17,44 +17,34 @@ module.exports.handler = async (event) => {
   const redis = require('./db/redis')();
 
   const { id, vote } = payload;
+  const strId = String(id);
   const keyCelebrities = 'celebrities';
 
-  if( await redis.sismember(`${keyCelebrities}`, id ) === 0 ) {
+  if( await redis.sismember(`${keyCelebrities}`, strId ) === 0 ) {
     return handleError(404, 'Not Found', 'Celebrity not found');
   }
 
   const pipeline = redis.pipeline();
   
   if( vote === 'up' ) {
-    pipeline.hincrby(`${keyCelebrities}:${id}`, 'votes:positive', 1);
+    pipeline.hincrby(`${keyCelebrities}:${strId}`, 'votes:positive', 1);
   } else {
-    pipeline.hincrby(`${keyCelebrities}:${id}`, 'votes:negative', 1);
+    pipeline.hincrby(`${keyCelebrities}:${strId}`, 'votes:negative', 1);
   }
 
-  pipeline.hget(`${keyCelebrities}:${id}`, 'votes:positive' );
-  pipeline.hget(`${keyCelebrities}:${id}`, 'votes:negative' );
+  pipeline.hget(`${keyCelebrities}:${strId}`, 'votes:positive' );
+  pipeline.hget(`${keyCelebrities}:${strId}`, 'votes:negative' );
 
-  const results = await pipeline.exec();
-  const parsedResults = mapPipelineResults(results);
+  await pipeline.exec();
+
+  redis.quit();
   
   return {
     statusCode: 200,
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      id,
-      vote,
-      results: {
-        positive: parsedResults[1],
-        negative: parsedResults[2],
-      },
-    }),
-  }
-}
-
-const mapPipelineResults = (results) => {
-  return results.map( r => r[1])
+  };
 }
 
 

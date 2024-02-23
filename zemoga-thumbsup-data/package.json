@@ -5,7 +5,6 @@
   "description": "Thumbs Up Data listing backend",
   "main": "index.js",
   "scripts": {
-    "seed": "node ./db/seeders.js",
     "dev": "lambda-local -l index.js -h handler --watch 8008"
   },
   "keywords": [],

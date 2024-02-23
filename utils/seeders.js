@@ -1,10 +1,10 @@
 const Redis = require('ioredis');
 
 const redis = new Redis({
-  port: process.env.redis_port,
-  host: process.env.redis_host,
-  username: process.env.redis_username,
-  password: process.env.redis_password,
+  port: 'ADD PORT HERE',
+  host: 12345,
+  username: 'ADD USERNAME HERE',
+  password: 'ADD PASSWORD HERE',
   connectTimeout: 10000,
   lazyConnect: true,
   keepAlive: 1000
@@ -106,6 +106,7 @@ redis.sadd('celebrities', ...indexes);
 
 data.forEach(({ id, name, description, category, picture, lastUpdated, votes }) => 
   redis.hset(`celebrities:${id}`, {
+    id,
     name,
     description,
     category,
@@ -117,3 +118,5 @@ data.forEach(({ id, name, description, category, picture, lastUpdated, votes }) 
 );
 
 console.timeEnd('Seeding');
+
+process.exit(0);
